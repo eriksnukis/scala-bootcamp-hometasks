@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 class BasicsSpec extends AnyFlatSpec {
 
   "gcd" should "be calculated correctly" in {
-    val sampleLcdList = List((21, 7, 7), (9, 6, 3))
+    val sampleLcdList = List((21, 7, 7), (9, 6, 3), (25,15,5))
     for (sample <- sampleLcdList) {
       gcd(sample._1, sample._2) shouldEqual sample._3
     }
