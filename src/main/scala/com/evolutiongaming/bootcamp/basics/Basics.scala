@@ -10,7 +10,11 @@ object Basics {
   //
   //
 
-  def lcm(a: Int, b: Int): Int = (a * b) / gcd(a, b)
+  def lcm(a: Int, b: Int): Int =
+    (a, b) match {
+      case (0, 0) => 0
+      case _ => (a * b) / gcd(a, b)
+    }
 
   @tailrec
   def gcd(a: Int, b: Int): Int = {
