@@ -18,18 +18,34 @@ package com.evolutiongaming.bootcamp.basics
 
 object ClassesAndTraits {
 
+
   sealed trait Shape extends Located with Bounded with Movable {
     def area: Double
+  }
+
+  sealed trait Shape3D extends Located3D with Bounded3D with Movable3D {
+    def surfaceArea: Double
+
+    def volume: Double
+
   }
 
   sealed trait Movable {
     def move(dx: Double, dy: Double): Movable
   }
 
+  sealed trait Movable3D {
+    def move(dx: Double, dy: Double, dz: Double): Movable3D
+  }
+
   sealed trait Located {
     def x: Double
 
     def y: Double
+  }
+
+  sealed trait Located3D extends Located {
+    def z: Double
   }
 
   sealed trait Bounded {
@@ -40,6 +56,12 @@ object ClassesAndTraits {
     def minY: Double
 
     def maxY: Double
+  }
+
+  sealed trait Bounded3D extends Bounded {
+    def minZ: Double
+
+    def maxZ: Double
   }
 
   final case class Point(x: Double, y: Double) extends Shape {
@@ -54,6 +76,72 @@ object ClassesAndTraits {
     override def move(dx: Double, dy: Double): Point = Point(x + dx, y + dy)
 
     override def area: Double = 0
+  }
+
+  final case class Point3D(x: Double, y: Double, z: Double) extends Shape3D {
+    override def surfaceArea: Double = 0
+
+    override def minZ: Double = z
+
+    override def maxZ: Double = z
+
+    override def move(dx: Double, dy: Double, dz: Double): Point3D = Point3D(x + dx, y + dy, z + dz)
+
+    override def minX: Double = x
+
+    override def maxX: Double = x
+
+    override def minY: Double = y
+
+    override def maxY: Double = y
+
+    override def volume: Double = 0
+  }
+
+  final case class Sphere(x: Double, y: Double, z: Double, radius: Double) extends Shape3D {
+    override def surfaceArea: Double = 4 * Math.PI * Math.pow(radius, 2)
+
+    override def volume: Double = 4 / 3 * Math.PI * Math.pow(radius, 3)
+
+    override def minZ: Double = z - radius
+
+    override def maxZ: Double = z + radius
+
+    override def minX: Double = x - radius
+
+    override def maxX: Double = x + radius
+
+    override def minY: Double = y - radius
+
+    override def maxY: Double = y + radius
+
+    override def move(dx: Double, dy: Double, dz: Double): Sphere = Sphere(x + dx, y + dy, z + dz, radius)
+  }
+
+  final case class Cube(centerX: Double, centerY: Double, centerZ: Double, height: Double) extends Shape3D {
+    override def minX: Double = centerX - height / 2
+
+    override def maxX: Double = centerX + height / 2
+
+    override def minY: Double = centerY - height / 2
+
+    override def maxY: Double = centerY + height / 2
+
+    override def move(dx: Double, dy: Double, dz: Double): Cube = Cube(centerX + dx, centerY + dy, centerZ + dz, height)
+
+    override def surfaceArea: Double = ???
+
+    override def volume: Double = ???
+
+    override def minZ: Double = centerZ - height / 2
+
+    override def maxZ: Double = centerZ + height / 2
+
+    override def z: Double = centerZ
+
+    override def x: Double = centerX
+
+    override def y: Double = centerY
   }
 
   final case class Circle(centerX: Double, centerY: Double, radius: Double) extends Shape {
@@ -71,7 +159,7 @@ object ClassesAndTraits {
 
     override def move(dx: Double, dy: Double): Circle = Circle(centerX + dx, centerY + dy, radius)
 
-    override def area: Double = Math.PI * radius * radius
+    override def area: Double = Math.PI * Math.pow(radius, 2)
   }
 
   final case class Rectangle(centerX: Double, centerY: Double, height: Double, width: Double) extends Shape {
@@ -107,7 +195,7 @@ object ClassesAndTraits {
 
     override def maxY: Double = y + height / 2
 
-    override def area: Double = height * height
+    override def area: Double = Math.pow(height, 2)
   }
 
   final case class Triangle(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double) extends Shape {
